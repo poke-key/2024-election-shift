@@ -7,11 +7,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import Papa from 'papaparse';
 import _ from 'lodash';
 
+interface StateData {
+  state: string;
+  dem_shift: number;
+  gop_shift: number;
+  total_shift: number;
+  margin_shift: number;
+  dem_pct_2020: number;
+  dem_pct_2024: number;
+  gop_pct_2020: number;
+  gop_pct_2024: number;
+}
+
+interface ProcessedData {
+  stateShifts: { [key: string]: StateData };
+}
+
 const ElectionShiftAnalysis = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedStates, setSelectedStates] = useState([]);
-  const [allStates, setAllStates] = useState([]);
+  const [data, setData] = useState<ProcessedData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedStates, setSelectedStates] = useState<string[]>([]);
+  const [allStates, setAllStates] = useState<string[]>([]);
 
   useEffect(() => {
     const analyzeData = async () => {
@@ -88,10 +104,10 @@ const ElectionShiftAnalysis = () => {
             gop_pct_2020: (data2020.gop_votes / data2020.total_votes) * 100,
             gop_pct_2024: (data2024.gop_votes / data2024.total_votes) * 100
           };
-        }).filter(Boolean);
+        }).filter(Boolean) as StateData[];
 
         setAllStates(allStateNames);
-        setSelectedStates(allStateNames.slice(0, 10)); // Initially show first 10 states
+        setSelectedStates(allStateNames.slice(0, 10));
         setData({
           stateShifts: _.keyBy(stateShifts, 'state')
         });
@@ -176,7 +192,7 @@ const ElectionShiftAnalysis = () => {
                         Math.abs(data.stateShifts[b].gop_shift) - Math.abs(data.stateShifts[a].gop_shift)
                       );
                     }
-                    setSelectedStates(sorted.slice(0, selectedStates.length));
+                    setSelectedStates(sorted!.slice(0, selectedStates.length));
                   }}
                 >
                   <SelectTrigger>
@@ -220,7 +236,7 @@ const ElectionShiftAnalysis = () => {
                   fontSize={12}
                 />
                 <Tooltip 
-                  formatter={(value) => [`${value.toFixed(2)}%`, 'Margin Shift']}
+                  formatter={(value: number) => [`${value.toFixed(2)}%`, 'Margin Shift']}
                   labelFormatter={(label) => `State: ${label}`}
                 />
                 <Legend />
@@ -260,7 +276,7 @@ const ElectionShiftAnalysis = () => {
                   fontSize={12}
                 />
                 <Tooltip 
-                  formatter={(value) => [value.toLocaleString(), 'Votes']}
+                  formatter={(value: number) => [value.toLocaleString(), 'Votes']}
                   labelFormatter={(label) => `State: ${label}`}
                 />
                 <Legend />
