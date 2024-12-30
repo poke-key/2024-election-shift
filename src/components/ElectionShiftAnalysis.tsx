@@ -154,12 +154,12 @@ const ElectionShiftAnalysis = () => {
               <div>
                 <label className="block text-sm font-medium mb-2">Number of States to Show</label>
                 <Select 
-                  value={selectedStates.length.toString()}
-                  onValueChange={(value) => {
+                  defaultValue={selectedStates.length.toString()}
+                  onValueChange={(value: string) => {
                     setSelectedStates(allStates.slice(0, parseInt(value)));
                   }}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select number of states" />
                   </SelectTrigger>
                   <SelectContent>
@@ -175,27 +175,27 @@ const ElectionShiftAnalysis = () => {
                 <label className="block text-sm font-medium mb-2">Sort By</label>
                 <Select
                   defaultValue="alphabet"
-                  onValueChange={(value) => {
+                  onValueChange={(value: string) => {
                     let sorted;
                     if (value === "alphabet") {
                       sorted = [...allStates].sort();
                     } else if (value === "margin") {
                       sorted = [...allStates].sort((a, b) => 
-                        Math.abs(data.stateShifts[b].margin_shift) - Math.abs(data.stateShifts[a].margin_shift)
+                        Math.abs(data!.stateShifts[b].margin_shift) - Math.abs(data!.stateShifts[a].margin_shift)
                       );
                     } else if (value === "dem_shift") {
                       sorted = [...allStates].sort((a, b) => 
-                        Math.abs(data.stateShifts[b].dem_shift) - Math.abs(data.stateShifts[a].dem_shift)
+                        Math.abs(data!.stateShifts[b].dem_shift) - Math.abs(data!.stateShifts[a].dem_shift)
                       );
                     } else if (value === "gop_shift") {
                       sorted = [...allStates].sort((a, b) => 
-                        Math.abs(data.stateShifts[b].gop_shift) - Math.abs(data.stateShifts[a].gop_shift)
+                        Math.abs(data!.stateShifts[b].gop_shift) - Math.abs(data!.stateShifts[a].gop_shift)
                       );
                     }
                     setSelectedStates(sorted!.slice(0, selectedStates.length));
                   }}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Sort states by..." />
                   </SelectTrigger>
                   <SelectContent>
